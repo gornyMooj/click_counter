@@ -8,20 +8,28 @@
 
 <button onclick="count_clicks()"> HIT ME </button>
 
-<p>COUNTER: <span id="counter_id">0</span></p>
+<p>COUNTER: <span id="counter_id">{{ counter }}</span></p>
 
 <script type="text/javascript">
-
-    console.log('Hello!')
+    console.log('Hello!');
 
     let counter_id = document.getElementById("counter_id");
-    let counter = parseInt(counter_id.innerText)
 
     function count_clicks() {
-        counter += 1; 
-        counter_id.innerText = counter;
+        // Send a POST request to increment the counter
+        fetch('/update_counter', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update the counter display with the new value from the server
+            counter_id.innerText = data.counter;
+        })
+        .catch(error => console.error('Error:', error));
     }
-
 </script>
 
 {% endblock content %}
